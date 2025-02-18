@@ -1,0 +1,16 @@
+#Stage: base
+FROM node:23-alpine AS base
+WORKDIR /app
+#Stage: client-base
+FROM base AS client-base
+COPY masterPortfolio/package.json masterPortfolio/package-lock.json ./
+RUN npm install --only=production && \
+    npm cache clean --force
+COPY ./masterPortfolio ./
+#Stage: client-dev
+FROM client-base AS client-dev
+CMD [ "npm", "start" ]
+#Stage: client-build
+FROM client-base AS client-build
+RUN npm install && \
+    npm run build

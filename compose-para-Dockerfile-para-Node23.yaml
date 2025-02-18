@@ -1,0 +1,25 @@
+networks:
+  network:
+    driver: bridge
+
+services:
+  frontend:
+    build:
+      context: ./
+      target: client-dev
+    ports:
+      - "80:3000"
+    environment:
+      - NODE_ENV=production
+    develop:
+      watch:
+        - path: ./masterPortfolio/src
+          action: sync
+          target: /app/src
+        - path: ./masterPortfolio/public
+          action: sync
+          target: /app/public
+        - path: ./client/package.json
+          action: rebuild
+    networks:
+      - network
